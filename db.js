@@ -17,21 +17,47 @@ const User = conn.define("user", {
   password: STRING,
 });
 
-User.byToken = async (token) => {
-  try {
-    const user = await User.findByPk(token);
-    if (user) {
-      return user;
+
+User.byToken = async(token)=> {
+    try {
+      //function accepts a token, here we're searching for a user that includes that token and assigning it to a variable
+      const user = await User.findByPk(token);
+      // if user is true (we found a user!) then return it
+      if(user){
+        return user;
+      }
+      //otherwise do not and throw an error, instead
+      const error = Error('bad credentials');
+      error.status = 401;
+      throw error;
     }
-    const error = Error("bad credentials");
-    error.status = 401;
-    throw error;
-  } catch (ex) {
-    const error = Error("bad credentials");
-    error.status = 401;
-    throw error;
-  }
-};
+    catch(ex){
+      const error = Error('bad credentials');
+      error.status = 401;
+      throw error;
+    }
+  };
+  
+
+
+
+
+
+// User.byToken = async (token) => {
+//   try {
+//     const user = await User.findByPk(token);
+//     if (user) {
+//       return user;
+//     }
+//     const error = Error("bad credentials");
+//     error.status = 401;
+//     throw error;
+//   } catch (ex) {
+//     const error = Error("bad credentials");
+//     error.status = 401;
+//     throw error;
+//   }
+// };
 
 User.authenticate = async ({ username, password }) => {
   const user = await User.findOne({
